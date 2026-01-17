@@ -1,0 +1,14 @@
+
+
+include:
+  - ./prod-config/db-server.yml
+  - ./prod-config/monitor-server.yml
+  - ./prod-config/access-monitor.yml
+  - ./prod-config/my-monitor.yml
+  - ./prod-config/observatory.yml
+  - ./prod-config/admin-monitor-suite.yml
+services:
+  proxy-service:
+    build:
+      context: .
+      target: production

@@ -1,0 +1,92 @@
+services:
+  mysql-db:
+    build: ./monitor-server/db 
+    container_name: mysql_server
+    command: --default-authentication-plugin=${DB_AUTH_STRATEGY}
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_USER_PASSWORD}
+    healthcheck:
+      test: ["CMD", "sh", "-c", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s    
+      timeout: 5s    
+      retries: 10     
+      start_period: 20s 
+    networks:
+      - db-network
+  monitor-server:
+    build: ./monitor-server
+    container_name: monitor-server
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => { if (r.statusCode === 200) process.exit(0); else process.exit(1); }).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - db-network
+      - backend-network
+  admin-monitor-suite:
+    build: ./admin-monitor-suite
+    container_name: admin-monitor-suite
+    networks:
+      - frontend-network
+      - backend-network
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      monitor-server:
+        condition: service_healthy
+  accessmonitor:
+    build: ./AccessMonitor
+    container_name: accessmonitor
+    networks:
+      - frontend-network
+      - backend-network
+  mymonitor:
+    build: ./MyMonitor
+    container_name: mymonitor
+    networks:
+      - frontend-network
+      - backend-network
+  observatory:
+    build: ./observatory
+    container_name: observatory
+    networks:
+      - frontend-network
+      - backend-network
+
+  proxy-service:
+    build: .
+    container_name: proxy-service
+    ports:
+      - "80:80"
+ #   healthcheck:
+ ##     test: ["CMD", "/usr/local/apache2/healthcheck.sh"]
+  #    interval: 20s
+  #    timeout: 5s
+  #    retries: 3
+  #    start_period: 5s
+    depends_on:
+      - accessmonitor
+      - observatory
+      - monitor-server
+      - admin-monitor-suite
+      - mymonitor
+    networks:
+      - frontend-network
+      - backend-network
+
+networks:
+  frontend-network:
+    driver: bridge
+  backend-network:
+    driver: bridge
+  db-network:
+    driver: bridge
