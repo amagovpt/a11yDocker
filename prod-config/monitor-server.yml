@@ -1,0 +1,27 @@
+services:
+  monitor-server:
+    build: 
+      context: ../monitor-server
+      target: production
+      args:
+        - NODE_ENV=production
+        - APP_AUTH_METHOD=local
+        - SECRET_KEY=secretKey
+        - REFERER=http://localhost/
+        - NAMESPACE=AMP
+        - AMPID=0
+        - PORT=3000
+        - VALIDATOR=http://10.55.37.17/validate/
+        - CLIENT_ID=5369659202618878362
+        - REDIRECT_URI=http://10.55.37.17/mm/loginRedirect
+    environment:
+        NODE_ENV: production
+        APP_AUTH_METHOD: "local"
+        SECRET_KEY: "secretKey"
+        REFERER: "http://localhost/"
+        NAMESPACE: AMP
+        AMPID: 0
+        PORT: 3000
+        VALIDATOR: http://10.55.37.17/validate/
+        CLIENT_ID: "5369659202618878362"
+        REDIRECT_URI: "http://10.55.37.17/mm/loginRedirect"

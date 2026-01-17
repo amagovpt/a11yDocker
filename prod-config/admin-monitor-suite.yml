@@ -1,0 +1,10 @@
+services:
+  admin-monitor-suite:
+    build:
+        context: ../admin-monitor-suite
+        target: production
+    networks:
+        - frontend-network
+        - backend-network
+    environment:
+      - NODE_ENV=production

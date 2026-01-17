@@ -1,0 +1,11 @@
+services:
+  mysql-db:
+    build:
+      context: ../monitor-server/db
+      target: development
+    networks:
+      - db-network
+    volumes:
+      - mysql-data-prod:/var/lib/mysql
+volumes:
+  mysql-data-prod:

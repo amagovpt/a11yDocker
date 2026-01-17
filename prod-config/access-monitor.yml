@@ -1,0 +1,15 @@
+services:
+ accessmonitor:
+    build:
+      context: ../AccessMonitor
+      target: production
+      args:
+        - REACT_APP_BASE_URL=/amp/
+        - REACT_APP_AMP_SERVER=http://localhost/api/amp
+        - REACT_APP_SERVER_URL=/amp/
+        - REACT_APP_API_DATA_SOURCE="remote"
+    environment: 
+      - NODE_ENV=production
+      - REACT_APP_AMP_SERVER=http://localhost/api/amp
+      - REACT_APP_SERVER_URL=/amp/
+      - REACT_APP_API_DATA_SOURCE="remote"

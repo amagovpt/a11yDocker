@@ -1,0 +1,12 @@
+services:
+  observatory:
+      build: 
+        context: ../observatory
+        target: production
+        args:
+          - REACT_APP_AMP_SERVER=http://localhost/api
+          - REACT_APP_SERVER_URL=/observatory
+          - REACT_APP_API_DATA_SOURCE=remote
+      networks:
+        - frontend-network
+        - backend-network

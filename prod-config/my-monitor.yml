@@ -1,0 +1,8 @@
+services:
+  mymonitor:
+    build: 
+      context: ../MyMonitor
+      target: production
+    networks:
+      - frontend-network
+      - backend-network
