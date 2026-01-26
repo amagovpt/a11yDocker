@@ -1,16 +1,22 @@
 #!/bin/bash
-declare -A REPOS=(
-    ["monitor-server"]="https://github.com/Filipedavila/monitor-server.git"
-    ["AccessMonitor"]="https://github.com/Filipedavila/AccessMonitor.git"
-    ["MyMonitor"]="https://github.com/Filipedavila/MyMonitor.git"
-    ["observatory"]="https://github.com/Filipedavila/observatory.git"
-    ["admin-monitor-suite"]="https://github.com/Filipedavila/admin-monitor-suite.git"
+REPOS_NAMES=("monitor-server" "AccessMonitor" "MyMonitor" "observatory" "admin-monitor-suite")
+
+REPOS_URLS=(
+    "https://github.com/Filipedavila/monitor-server.git"
+    "https://github.com/Filipedavila/AccessMonitor.git"
+    "https://github.com/Filipedavila/MyMonitor.git"
+    "https://github.com/Filipedavila/observatory.git"
+    "https://github.com/Filipedavila/admin-monitor-suite.git"
 )
-## check if exists folders, if not clone the git repos
-for repo in "${!REPOS[@]}"; do
+
+
+
+for i in "${!REPOS_NAMES[@]}"; do
+    repo="${REPOS_NAMES[$i]}"
+    url="${REPOS_URLS[$i]}"
     if [ ! -d "$repo" ]; then
         echo "Cloning $repo..."
-        git clone "${REPOS[$repo]}" "$repo"
+        git clone "$url" "$repo"
         cd "$repo"
         git checkout develop
         cd ..
